@@ -4,10 +4,6 @@ import { getInputPath, getSolutionPath } from './pathResolvers.js';
 
 const { differenceInMilliseconds, format } = datefns;
 
-// const fs = require("fs");
-// const { differenceInMilliseconds, format } = require("date-fns");
-// const { getInputPath, getSolutionPath } = require('./pathResolvers');
-
 const launcher = async (dayArg, partArg, log = true) => {
   const day = !dayArg.length || dayArg.length === 1 ? `0${dayArg}` : `${dayArg}`;
   const { solution } = await import(getSolutionPath(day, partArg));
