@@ -1,0 +1,28 @@
+{
+  "name": "advent-of-code-2019",
+  "version": "1.0.0",
+  "description": "Advent of Code 2019 Solutions",
+  "engines": {
+    "node": ">=13.2"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "node --harmony-nullish --harmony-optional-chaining ./node_modules/.bin/jest",
+    "start": "node --harmony-nullish --harmony-optional-chaining index.js"
+  },
+  "keywords": [
+    "advent",
+    "of",
+    "code",
+    "javascript"
+  ],
+  "author": "Ash Browning",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "prettier": "1.19.1"
+  },
+  "dependencies": {
+    "date-fns": "^2.8.1"
+  }
+}
