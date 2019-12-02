@@ -1,6 +1,7 @@
 'use strict';
 
-const launcher = require('./tools/launcher.js');
+import launcher from './tools/launcher.js';
+
 const dayArg = process.argv[2];
 const partArg = process.argv[3];
 

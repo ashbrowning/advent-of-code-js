@@ -1,7 +1,5 @@
 const equation = mass => Math.floor(mass / 3) - 2;
 
-
-
 const solution = input => input.reduce((memo, component) => {
   let fuel = equation(component);
   let totalFuel = 0;
@@ -13,9 +11,9 @@ const solution = input => input.reduce((memo, component) => {
   return totalFuel + memo;
 }, 0);
 
-module.exports = solution;
+const answer =4955106;
 
-module.exports = {
+export {
   solution,
-  answer: 4955106
+  answer
 }

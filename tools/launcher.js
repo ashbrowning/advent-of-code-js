@@ -1,10 +1,16 @@
-const fs = require("fs");
-const { differenceInMilliseconds, format } = require("date-fns");
-const { getInputPath, getSolutionPath } = require('./pathResolvers');
+import fs from 'fs';
+import datefns from 'date-fns';
+import { getInputPath, getSolutionPath } from './pathResolvers.js';
 
-module.exports = (dayArg, partArg, log = true) => {
+const { differenceInMilliseconds, format } = datefns;
+
+// const fs = require("fs");
+// const { differenceInMilliseconds, format } = require("date-fns");
+// const { getInputPath, getSolutionPath } = require('./pathResolvers');
+
+const launcher = async (dayArg, partArg, log = true) => {
   const day = !dayArg.length || dayArg.length === 1 ? `0${dayArg}` : `${dayArg}`;
-  const { solution } = require(getSolutionPath(day, partArg));
+  const { solution } = await import(getSolutionPath(day, partArg));
   const input = fs
     .readFileSync(getInputPath(day), { encoding: "utf8" })
     .split("\n");
@@ -19,3 +25,5 @@ module.exports = (dayArg, partArg, log = true) => {
   }
   return result;
 };
+
+export default launcher;
