@@ -12,9 +12,9 @@
       },
     },
     {
-      "type": "npm",
-      "script": "start",
-      "problemMatcher": []
+      "type": "shell",
+      "label": "NPM Start",
+      "command": "npm run start 2 1",
     }
   ]
 }
