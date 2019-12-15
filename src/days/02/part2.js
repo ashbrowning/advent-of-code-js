@@ -1,5 +1,7 @@
 import { runIntProgram } from './utils.js';
 
+// Optimisation idea: build array of pointers sorted based on value they point to and binary search
+
 const solution = input => {
   const instructions = input[0].split(',').map(d => parseInt(d, 10));
 
