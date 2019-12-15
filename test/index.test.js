@@ -2,8 +2,8 @@ import fs from 'fs';
 import { getInputPath, getSolutionPath } from '../tools/pathResolvers';
 
 describe("Advent of Code 2019 JS", () => {
-  for (let i = 1; i <= 1; ++i) {
-    describe(`Day ${i+1}`, () => {
+  for (let i = 1; i <= 2; ++i) {
+    describe(`Day ${i}`, () => {
       const input = fs
       .readFileSync(getInputPath(i), { encoding: "utf8" })
       .split("\n");

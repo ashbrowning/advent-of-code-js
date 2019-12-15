@@ -1,7 +1,9 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import esDirname from 'es-dirname';
+
+const __dirname = esDirname();
 
 const dayResolver = day => !day.length || day.length === 1 ? `0${day}` : `${day}`;
 
