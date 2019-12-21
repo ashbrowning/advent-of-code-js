@@ -1,62 +1,42 @@
-const getCoords = ([x, y], instruction) => {
-  const direction = instruction[0];
-  const delta = parseInt(instruction.substring(1));
-  const coords = [];
-  for (let i = 1; i <= delta; ++i) {
-    coords.push([
-      direction === "R" ? x + i : direction === "L" ? x - i : x,
-      direction === "U" ? y + i : direction === "D" ? y - i : y
-    ]);
+const hasPair = str => {
+  let currentPair = '';
+  let streak = 1;
+  for (let i = 1; i < str.length; ++i) {
+    if (str[i-1] === str[i]) {
+      streak += 1;
+      currentPair = str[i];
+    } else {
+      if (streak === 2) {
+        return true;
+      } else {
+        streak = 1;
+      }
+    }
   }
-  return coords;
+  return streak === 2;
+};
+
+const hasIncreasingDigits = str => {
+  for (let i = 1; i < str.length; ++i) {
+    if (str[i-1] > str[i]) {
+      return false;
+    }
+  };
+  return true;
 };
 
 const solution = input => {
-  const [wireA, wireB] = input.map(wire => wire.split(","));
-
-  const wireACoordsOrder = [];
-  wireA.reduce(
-    (coord, instruction) => {
-      const newCoords = getCoords(coord, instruction);
-      wireACoordsOrder.push.apply(
-        wireACoordsOrder,
-        newCoords.map(coord => coord.join(","))
-      );
-      return newCoords[newCoords.length - 1];
-    },
-    [0, 0]
-  );
-
-  // Quicker lookups with a Set
-  const wireACoordsSet = new Set();
-  wireACoordsOrder.forEach(coordStr => wireACoordsSet.add(coordStr));
-
-  const intersections = {};
-
-  let bStep = 1;
-  wireB.reduce(
-    (currentCoord, instruction) => {
-      const newCoords = getCoords(currentCoord, instruction);
-      newCoords.forEach(coord => {
-        const coordStr = coord.join(",");
-        if (wireACoordsSet.has(coordStr) && !intersections[coordStr]) {
-          intersections[coordStr] = bStep + wireACoordsOrder.indexOf(coordStr) + 1;
-        }
-        bStep += 1;
-      });
-      return newCoords[newCoords.length - 1];
-    },
-    [0, 0]
-  );
-
-
-  return Object.values(intersections).reduce(
-    (memo, steps) => (steps < memo ? steps : memo),
-    Number.MAX_SAFE_INTEGER
-  );
-
+  const [min, max] = input[0].split('-').map(str => parseInt(str));
+  let count = 0;
+  for (let i = min; i <= max; ++i) {
+    const password = `${i}`;
+    if (hasIncreasingDigits(password) && hasPair(password)) {
+      count += 1;
+    }
+  }
+  return count;
 };
 
-const answer = 3454;
+const answer = 603;
 
 export { solution, answer };
