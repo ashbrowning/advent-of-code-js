@@ -66,7 +66,7 @@ const runIntMachine = (instructions, inputParam) => {
       case 3:
         console.log(
           "take input",
-          opCode,
+          fullOpCode,
           instructions[ptr + 1],
           "|",
           inputParam
@@ -74,16 +74,97 @@ const runIntMachine = (instructions, inputParam) => {
         instructions[instructions[ptr + 1]] = inputParam;
         ptr += 2;
         break;
-      case 4:
+      case 4: {
+        const operand1 = paramMode1
+        ? instructions[ptr + 1]
+        : instructions[instructions[ptr + 1]];
         console.log(
           "give output",
-          opCode,
+          fullOpCode,
           instructions[ptr + 1],
           "|",
-          inputParam
+          operand1
         );
-        outputs.push(instructions[instructions[ptr + 1]]);
+
+        outputs.push(operand1);
         ptr += 2;
+      }
+        break;
+      case 5:
+        {
+          const operand1 = paramMode1
+            ? instructions[ptr + 1]
+            : instructions[instructions[ptr + 1]];
+          const operand2 = paramMode2
+            ? instructions[ptr + 2]
+            : instructions[instructions[ptr + 2]];
+          console.log("jump-if-true", fullOpCode, operand1, operand2);
+          if (operand1 !== 0) {
+            ptr = operand2;
+          } else {
+            ptr += 3;
+          }
+        }
+        break;
+      case 6:
+        {
+          const operand1 = paramMode1
+            ? instructions[ptr + 1]
+            : instructions[instructions[ptr + 1]];
+          const operand2 = paramMode2
+            ? instructions[ptr + 2]
+            : instructions[instructions[ptr + 2]];
+          console.log("jump-if-false", fullOpCode, operand1, operand2);
+          if (operand1 === 0) {
+            ptr = operand2;
+          } else {
+            ptr += 3;
+          }
+        }
+        break;
+      case 7:
+        {
+          const operand1 = paramMode1
+            ? instructions[ptr + 1]
+            : instructions[instructions[ptr + 1]];
+          const operand2 = paramMode2
+            ? instructions[ptr + 2]
+            : instructions[instructions[ptr + 2]];
+          console.log(
+            "less than",
+            fullOpCode,
+            instructions[ptr + 1],
+            instructions[ptr + 2],
+            instructions[ptr + 3],
+            '|',
+            operand1,
+            operand2,
+          );
+          instructions[instructions[ptr + 3]] = operand1 < operand2 ? 1 : 0;
+          ptr += 4;
+        }
+        break;
+      case 8:
+        {
+          const operand1 = paramMode1
+            ? instructions[ptr + 1]
+            : instructions[instructions[ptr + 1]];
+          const operand2 = paramMode2
+            ? instructions[ptr + 2]
+            : instructions[instructions[ptr + 2]];
+          console.log(
+            "equal than",
+            fullOpCode,
+            instructions[ptr + 1],
+            instructions[ptr + 2],
+            instructions[ptr + 3],
+            "|",
+            operand1,
+            operand2,
+          );Ì
+          instructions[instructions[ptr + 3]] = operand1 === operand2 ? 1 : 0;
+          ptr += 4;
+        }
         break;
       case 99:
         console.log("halting!", outputs);

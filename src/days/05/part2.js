@@ -7,6 +7,6 @@ const solution = input => {
   return outputs[outputs.length - 1];
 };
 
-const answer = 8332629;
+const answer = 8805067;
 
 export { solution, answer };
