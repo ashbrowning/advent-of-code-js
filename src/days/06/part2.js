@@ -1,7 +1,7 @@
 const stepsToAncester = ({ start, ancestor, mappings }) => {
   let orbiter = start;
   let count = 0;
-  while((mappings[orbiter] && mappings[orbiter] !== ancestor)) {
+  while (mappings[orbiter] && mappings[orbiter] !== ancestor) {
     orbiter = mappings[orbiter];
     count += 1;
   }
@@ -10,14 +10,14 @@ const stepsToAncester = ({ start, ancestor, mappings }) => {
 
 const solution = input => {
   const mappings = input
-    .map(pair => pair.split(")"))
+    .map(pair => pair.split(')'))
     .reduce((memo, [body, orbiter]) => {
-      memo[`${orbiter}`] = body;
+      memo[orbiter] = body;
       return memo;
     }, {});
 
-  const start = "YOU";
-  const destination = "SAN";
+  const start = 'YOU';
+  const destination = 'SAN';
 
   const [startRoute, destinationRoute] = [start, destination].map(
     startingOrbiter => {
@@ -32,7 +32,10 @@ const solution = input => {
   );
 
   const ancestor = startRoute.filter(o => destinationRoute.includes(o))[0];
-  return stepsToAncester({ start, ancestor, mappings }) + stepsToAncester({ start: destination, ancestor, mappings });
+  return (
+    stepsToAncester({ start, ancestor, mappings }) +
+    stepsToAncester({ start: destination, ancestor, mappings })
+  );
 };
 
 const answer = 460;
