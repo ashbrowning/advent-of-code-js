@@ -1,6 +1,6 @@
 const solution = input => {
   const mappings = input
-    .map(pair => pair.split(")"))
+    .map(pair => pair.split(')'))
     .reduce((memo, [body, orbiter]) => {
       memo[`${orbiter}`] = body;
       return memo;
