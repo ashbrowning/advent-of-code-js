@@ -1,4 +1,5 @@
-import { getArrayPermutations, runIntMachine } from "./utils.js";
+import { getArrayPermutations } from "./utils.js";
+import { runIntMachine } from "../../utils/intMachine.js";
 
 const phaseOptions = [5, 6, 7, 8, 9];
 
