@@ -1,17 +1,4 @@
-import { runIntMachine } from './utils.js';
-
-function* getArrayPermutations(arr) {
-  if (arr.length === 1) {
-    yield arr;
-  }
-  for (let i = 0; i < arr.length; ++i) {
-    let slicedArray = arr.slice();
-    slicedArray.splice(i, 1);
-    for (let n of getArrayPermutations(slicedArray)) {
-      yield [arr[i], ...n];
-    }
-  }
-}
+import { getArrayPermutations, runIntMachine } from "./utils.js";
 
 const phaseOptions = [4, 3, 2, 1, 0];
 
@@ -20,9 +7,13 @@ const solution = input => {
   let maxThrusterSignal = 0;
   for (let phaseOrder of getArrayPermutations(phaseOptions)) {
     let outputSignal = 0;
-    for(let i = 0; i < phaseOrder.length; ++i) {
-      const outputs = runIntMachine(instructions, [phaseOrder[i], outputSignal]);
-      outputSignal = outputs[outputs.length - 1];
+    for (let i = 0; i < phaseOrder.length; ++i) {
+      const generator = runIntMachine(instructions, [
+        phaseOrder[i],
+        outputSignal
+      ]);
+      const result = generator.next();
+      outputSignal = result.value;
     }
 
     if (maxThrusterSignal < outputSignal) {

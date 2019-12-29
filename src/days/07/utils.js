@@ -1,5 +1,19 @@
-const runIntMachine = (instructions, inputParams) => {
+function* getArrayPermutations(arr) {
+  if (arr.length === 1) {
+    yield arr;
+  }
+  for (let i = 0; i < arr.length; ++i) {
+    let slicedArray = arr.slice();
+    slicedArray.splice(i, 1);
+    for (let n of getArrayPermutations(slicedArray)) {
+      yield [arr[i], ...n];
+    }
+  }
+}
+
+function* runIntMachine(instructionsParam, inputParams) {
   const outputs = [];
+  const instructions = instructionsParam.slice();
   const inputs = inputParams.slice();
   let ptr = 0;
 
@@ -14,7 +28,6 @@ const runIntMachine = (instructions, inputParams) => {
       parseInt(fullOpCode.slice(-4, -3)) || 0
         ? instructions[ptr + 2]
         : instructions[instructions[ptr + 2]];
-
     switch (opCode) {
       case 1:
         // Addition
@@ -33,7 +46,9 @@ const runIntMachine = (instructions, inputParams) => {
         break;
       case 4:
         // Output
+        const input = yield operand1;
         outputs.push(operand1);
+        inputs.unshift(input);
         ptr += 2;
         break;
       case 5:
@@ -66,7 +81,7 @@ const runIntMachine = (instructions, inputParams) => {
         ptr = Number.MAX_SAFE_INTEGER;
     }
   }
-  return outputs;
+  return outputs[outputs.length - 1];
 };
 
-export { runIntMachine };
+export { getArrayPermutations, runIntMachine };

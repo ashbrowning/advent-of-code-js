@@ -2,7 +2,7 @@ import fs from 'fs';
 import { getInputPath, getSolutionPath } from '../tools/pathResolvers';
 
 describe("Advent of Code 2019 JS", () => {
-  for (let i = 1; i <= 6; ++i) {
+  for (let i = 1; i <= 7; ++i) {
     describe(`Day ${i}`, () => {
       const input = fs
       .readFileSync(getInputPath(i), { encoding: "utf8" })
