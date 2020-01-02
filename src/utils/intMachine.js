@@ -1,14 +1,35 @@
-const getOperand = (instructions, fullOpCode, ptr, paramIndex ) => {
+const OPERATIONS = {
+  ADD: 1,
+  MULTIPLY: 2,
+  INPUT: 3,
+  OUTPUT: 4,
+  IFNOTZERO: 5,
+  IFZERO: 6,
+  LESSTHAN: 7,
+  EQUALTO: 8,
+  RELATIVE: 9,
+  HALT: 99
+};
+
+const getOperand = (instructions, fullOpCode, ptr, paramIndex, relativeBase ) => {
   const paramMode = parseInt(fullOpCode.slice(-3 - paramIndex, -2 - paramIndex) || 0, 10)
-  return paramMode ? instructions[ptr + paramIndex + 1] : instructions[instructions[ptr + paramIndex + 1]];
+  switch (paramMode) {
+    case 0:
+      return instructions[instructions[ptr + 1 + paramIndex]] || 0;
+    case 1:
+      return instructions[ptr + 1 + paramIndex] || 0;
+    case 2:
+      return instructions[instructions[ptr + 1 + paramIndex] + relativeBase] || 0;
+  }
 }
 
-const setValue = (instructions, fullOpCode, ptr, paramIndex, value) => {
+const setValue = (instructions, fullOpCode, ptr, paramIndex, value, relativeBase) => {
   const paramMode = parseInt(fullOpCode.slice(-3 - paramIndex, -2 - paramIndex) || 0, 10);
   if (paramMode === 2) {
-    console.log('paramode 2');
+    const location = (instructions[ptr + 1 + paramIndex] + relativeBase) || 0;
+    instructions[location] = value;
   } else {
-    instructions[instructions[ptr + paramIndex + 1]] = value;
+    instructions[instructions[ptr + 1 + paramIndex]] = value;
   }
 };
 
@@ -22,33 +43,32 @@ function* runIntMachine(instructionsParam, inputParams = []) {
   while (ptr < instructions.length) {
     const fullOpCode = '' + instructions[ptr];
     const opCode = parseInt(fullOpCode.slice(-2));
-    const operand1 = getOperand(instructions, fullOpCode, ptr, 0);
-    const operand2 = getOperand(instructions, fullOpCode, ptr, 1);
+    const operand1 = getOperand(instructions, fullOpCode, ptr, 0, relativeBase);
+    const operand2 = getOperand(instructions, fullOpCode, ptr, 1, relativeBase);
     switch (opCode) {
-      case 1:
+      case OPERATIONS.ADD:
         // Addition
-        setValue(instructions, fullOpCode, ptr, 2, operand1 + operand2);
-        // instructions[instructions[ptr + 3]] = operand1 + operand2;
+        setValue(instructions, fullOpCode, ptr, 2, operand1 + operand2, relativeBase);
         ptr += 4;
         break;
-      case 2:
+      case OPERATIONS.MULTIPLY:
         // Multiplication
-        setValue(instructions, fullOpCode, ptr, 2, operand1 * operand2);
+        setValue(instructions, fullOpCode, ptr, 2, operand1 * operand2, relativeBase);
         ptr += 4;
         break;
-      case 3:
+      case OPERATIONS.INPUT:
         // Input
-        setValue(instructions, fullOpCode, ptr, 0, inputs.shift());
+        setValue(instructions, fullOpCode, ptr, 0, inputs.shift(), relativeBase);
         ptr += 2;
         break;
-      case 4:
+      case OPERATIONS.OUTPUT:
         // Output
         const input = yield operand1;
         outputs.push(operand1);
         inputs.unshift(input);
         ptr += 2;
         break;
-      case 5:
+      case OPERATIONS.IFNOTZERO:
         // If not zero
         if (operand1 !== 0) {
           ptr = operand2;
@@ -56,7 +76,7 @@ function* runIntMachine(instructionsParam, inputParams = []) {
           ptr += 3;
         }
         break;
-      case 6:
+      case OPERATIONS.IFZERO:
         // If zero
         if (operand1 === 0) {
           ptr = operand2;
@@ -64,22 +84,23 @@ function* runIntMachine(instructionsParam, inputParams = []) {
           ptr += 3;
         }
         break;
-      case 7:
+      case OPERATIONS.LESSTHAN:
         // It first operand is less than second
-        setValue(instructions, fullOpCode, ptr, 2, operand1 < operand2 ? 1 : 0);
+        setValue(instructions, fullOpCode, ptr, 2, operand1 < operand2 ? 1 : 0, relativeBase);
         ptr += 4;
         break;
-      case 8:
+      case OPERATIONS.EQUALTO:
         // If operands are equal
-        setValue(instructions, fullOpCode, ptr, 2, operand1 === operand2 ? 1 : 0);
+        setValue(instructions, fullOpCode, ptr, 2, operand1 === operand2 ? 1 : 0, relativeBase);
         ptr += 4;
         break;
-      case 9: {
-        relativeBase += getOperand(instructions, fullOpCode, ptr, 0);
+      case OPERATIONS.RELATIVE: {
+        const incBase = getOperand(instructions, fullOpCode, ptr, 0, relativeBase);
+        relativeBase += incBase;
         ptr += 2;
       }
       break;
-      case 99:
+      case OPERATIONS.HALT:
         ptr = Number.MAX_SAFE_INTEGER;
     }
   }
