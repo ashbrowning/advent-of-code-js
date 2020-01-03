@@ -40,7 +40,7 @@ function* runIntMachine(instructionsParam, inputParams = []) {
   let ptr = 0;
   let relativeBase = 0;
 
-  while (ptr < instructions.length && prevPtr !== ptr) {
+  while (ptr < instructions.length) {
     const fullOpCode = '' + instructions[ptr];
     const opCode = parseInt(fullOpCode.slice(-2));
     const operand1 = getOperand(instructions, fullOpCode, ptr, 0, relativeBase);
