@@ -40,7 +40,7 @@ function* runIntMachine(instructionsParam, inputParams = []) {
   let ptr = 0;
   let relativeBase = 0;
 
-  while (ptr < instructions.length) {
+  while (ptr < instructions.length && prevPtr !== ptr) {
     const fullOpCode = '' + instructions[ptr];
     const opCode = parseInt(fullOpCode.slice(-2));
     const operand1 = getOperand(instructions, fullOpCode, ptr, 0, relativeBase);
@@ -102,6 +102,9 @@ function* runIntMachine(instructionsParam, inputParams = []) {
       break;
       case OPERATIONS.HALT:
         ptr = Number.MAX_SAFE_INTEGER;
+        break;
+      default:
+        console.warn('unsupported operation', instructions[ptr]);
     }
   }
   return outputs[outputs.length - 1];
