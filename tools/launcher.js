@@ -1,12 +1,13 @@
 import fs from 'fs';
 import datefns from 'date-fns';
-import { getInputPath, getSolutionPath } from './pathResolvers.js';
+import { dayResolver, getInputPath, getSolutionPath } from './pathResolvers.js';
 
 const { differenceInMilliseconds, format } = datefns;
 
 const launcher = async (dayArg, partArg, log = true) => {
-  const day = !dayArg.length || dayArg.length === 1 ? `0${dayArg}` : `${dayArg}`;
-  const { solution } = await import(getSolutionPath(day, partArg));
+  // const day = !dayArg.length || dayArg.length === 1 ? `0${dayArg}` : `${dayArg}`;
+  const day = dayResolver(dayArg);
+  const { solution } = await import(getSolutionPath(day , partArg));
   const input = fs
     .readFileSync(getInputPath(day), { encoding: "utf8" })
     .split("\n");
