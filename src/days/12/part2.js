@@ -1,71 +1,80 @@
-import { runIntMachine } from '../../utils/intMachine.js';
+import { getPairPermutations, lowestCommonMultiple } from '../../utils/index.js';
+
+const regex = /<x=(-?\d+), y=(-?\d+), z=(-?\d+)>/;
+
+const getMoons = moonStr =>
+  regex
+    .exec(moonStr)
+    .slice(1)
+    .map(coord => parseInt(coord, 10));
+
+const updateMoonVelocity = (moons, aIdx, bIdx, dimension) => {
+  if (moons[aIdx][`${dimension}`] !== moons[bIdx][`${dimension}`]) {
+    moons[aIdx][`${dimension}Delta`] +=
+      moons[aIdx][`${dimension}`] > moons[bIdx][`${dimension}`] ? -1 : 1;
+    moons[bIdx][`${dimension}Delta`] +=
+      moons[aIdx][`${dimension}`] > moons[bIdx][`${dimension}`] ? 1 : -1;
+  }
+};
+
+const serialiseAxis = (moons, axis) =>
+  moons.reduce((memo, moon) =>  memo + moon[axis] + ',' + moon[`${axis}Delta`] + '|', '');
 
 const solution = input => {
-  const instructions = input[0].split(',').map(i => parseInt(i, 10));
+  const moons = input.map(getMoons).map(([x, y, z]) => ({
+    x,
+    y,
+    z,
+    xDelta: 0,
+    yDelta: 0,
+    zDelta: 0
+  }));
 
-  let haltFlag = false;
-  let x = 0;
-  let y = 0;
-  let orientation = 0; // 0 = up, 1 = right, 2 = down, 3 = left
-  const map = {
-    '0,0': 1
-  };
-  const generator = runIntMachine(instructions, [map[`${x},${y}`]]);
-  let isPainting = true;
+  const permutations = [];
+  const gen = getPairPermutations(4);
+  for (let i of gen) {
+    permutations.push(i);
+  }
 
-  while (!haltFlag) {
-    const result = generator.next(
-      map[`${x},${y}`] === undefined ? 0 : map[`${x},${y}`]
-    );
-    if (isPainting) {
-      map[`${x},${y}`] = result.value;
-    } else {
-      const orientationDelta = result.value === 0 ? -1 : 1;
-      orientation = (orientation + orientationDelta + 4) % 4;
+  const axes = ['x', 'y', 'z'];
+  const initialAxisStates = axes.map(axis => serialiseAxis(moons, axis));
 
-      if (orientation % 2) {
-        x -= orientation - 2;
-      } else {
-        y += orientation - 1;
+  const axisPhases = [0, 0, 0];
+  let step = 0;
+  while (!axisPhases.every(e => e !== 0)) {
+    for (let i = 0; i < axes.length; ++i) {
+      if (axisPhases[i] !== 0) {
+        continue;
+      }
+
+      const str = serialiseAxis(moons, axes[i]);
+
+      if (initialAxisStates[i] === str) {
+        axisPhases[i] = step;
       }
     }
 
-    isPainting = !isPainting;
-    haltFlag = result.done;
+    for (let j = 0; j < permutations.length; ++j) {
+      const moonAIndex = permutations[j][0];
+      const moonBIndex = permutations[j][1];
+
+      updateMoonVelocity(moons, moonAIndex, moonBIndex, 'x');
+      updateMoonVelocity(moons, moonAIndex, moonBIndex, 'y');
+      updateMoonVelocity(moons, moonAIndex, moonBIndex, 'z');
+    }
+
+    // Apply velocity to position
+    for (let i = 0; i < moons.length; ++i) {
+      moons[i].x += moons[i].xDelta;
+      moons[i].y += moons[i].yDelta;
+      moons[i].z += moons[i].zDelta;
+    }
+    step += 1;
   }
 
-  // Find the bounds
-  const bounds = Object.keys(map).reduce(
-    (memo, coord) => {
-      const [x, y] = coord.split(',').map(c => parseInt(c, 10));
-      memo.xMax = x > memo.xMax ? x : memo.xMax;
-      memo.xMin = x < memo.xMin ? x : memo.xMin;
-      memo.yMax = y > memo.yMax ? y : memo.yMax;
-      memo.yMin = y < memo.yMin ? y : memo.yMin;
-      return memo;
-    },
-    {
-      xMax: 0,
-      xMin: 0,
-      yMax: 0,
-      yMin: 0
-    }
-  );
-
-  const renderedImage = [];
-  for (let i = bounds.yMin; i <= bounds.yMax; ++i) {
-    const row = [];
-    for (let j = bounds.xMin; j <= bounds.xMax; ++j) {
-      row.push(map[`${j},${i}`] ?  '■' : '□');
-    }
-    renderedImage.push(row);
-  }
-
-  return renderedImage.reduce((memo, row) => memo += row.join(''),'');
+  return lowestCommonMultiple(axisPhases);
 };
 
-// JFBERBUH
+const answer = 506359021038056;
 
-const answer = '□□□■■□■■■■□■■■□□■■■■□■■■□□■■■□□■□□■□■□□■□□□□□□□■□■□□□□■□□■□■□□□□■□□■□■□□■□■□□■□■□□■□□□□□□□■□■■■□□■■■□□■■■□□■□□■□■■■□□■□□■□■■■■□□□□□□□■□■□□□□■□□■□■□□□□■■■□□■□□■□■□□■□■□□■□□□□■□□■□■□□□□■□□■□■□□□□■□■□□■□□■□■□□■□■□□■□■□□□■■□□■□□□□■■■□□■■■■□■□□■□■■■□□□■■□□■□□■□□□';
-
-export { solution, answer };
+export { answer, solution };

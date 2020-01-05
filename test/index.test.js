@@ -2,7 +2,7 @@ import fs from 'fs';
 import { dayResolver, getInputPath, getSolutionPath } from '../tools/pathResolvers';
 
 describe('Advent of Code 2019 JS', () => {
-  for (let i = 1; i <= 11; ++i) {
+  for (let i = 1; i <= 12; ++i) {
     describe(`Day ${i}`, () => {
       const day = dayResolver(i);
       const input = fs

@@ -22,8 +22,32 @@ function* getPairPermutations(max) {
   }
 }
 
+const greatestCommonFactor = numbers => {
+  const smallest = numbers.reduce(
+    (memo, number) => (number < memo ? number : memo),
+    Number.MAX_SAFE_INTEGER
+  );
+
+  let gcf = 1;
+  for (let i = 1; i <= smallest; ++i) {
+    gcf = numbers.every(n => Number.isInteger(n / i)) ? i : gcf;
+  }
+
+  return gcf;
+};
+
+const lowestCommonMultiple = numbers => {
+  let memo = numbers[0];
+  for (let i = 1; i < numbers.length; ++i) {
+    memo = (memo * numbers[i]) / greatestCommonFactor([memo, numbers[i]]);
+  }
+  return memo;
+};
+
 export {
   getArrayPermutations,
   getPairPermutations,
+  greatestCommonFactor,
+  lowestCommonMultiple,
   replaceChar
 };
