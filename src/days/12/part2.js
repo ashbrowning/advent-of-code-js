@@ -72,7 +72,8 @@ const solution = input => {
     step += 1;
   }
 
-  return lowestCommonMultiple(axisPhases);
+  // return lowestCommonMultiple(axisPhases);
+  return axisPhases.reduce(lowestCommonMultiple);
 };
 
 const answer = 506359021038056;
