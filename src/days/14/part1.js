@@ -1,3 +1,15 @@
+class Reaction {
+  constructor({inputs, output, outputQuantity}) {
+    this.inputs = inputs;
+    this.output = output;
+    this.outputQuantity = outputQuantity;
+  }
+
+  hasInput(input) {
+    return Object.keys(this.inputs).includes(input);
+  }
+}
+
 const solution = input => {
   const reactions = input
     .map(line => line.split('=>'))
@@ -8,77 +20,61 @@ const solution = input => {
         return memo;
       }, {});
 
-      const [outputQuantity, outputIngredient] = outputStr.trim().split(' ');
-      memo[outputIngredient] = [
-        inputs,
-        { [outputIngredient]: parseInt(outputQuantity, 10) }
-      ];
+      const [outputQuantity, output] = outputStr.trim().split(' ');
+
+      memo[output] = new Reaction({inputs, output, outputQuantity: parseInt(outputQuantity, 10)});
+
       return memo;
     }, {});
 
   console.log('reactions', reactions);
-
-  let flag = false;
 
   // Use minus a surplus
   const currentDemand = {
     FUEL: 1
   };
 
-  while (!(currentDemand['ORE'] && Object.keys(currentDemand).length === 1)) {
-    // Find the reaction from current demand that does not depend on others
-
-    console.log('');
+  while (true) {
 
     const demandKeys = Object.keys(currentDemand).filter(
       key => currentDemand[key] > 0
     );
 
-    // let currentReaction =
-    //   demandKeys[0] !== 'ORE' ? demandKeys[0] : demandKeys[1];
+    if (demandKeys.length === 1 && demandKeys[0] === 'ORE') {
+      break;
+    }
 
     let currentReaction;
     let validReactions = [];
 
-    //Optimisation to chose a current Demand ingredient that is not needed for subsequent reactions
-
-    // For each demanded ingredient, choose the one that does not feature in inputs for other demanded ingerdients
     demandKeys.forEach(ingredient => {
       if (ingredient === 'ORE') return;
 
       const isStandalone = !demandKeys.reduce((flag, key) => {
-        // if (key === 'ORE') return true
         if (key === 'ORE' || key === ingredient) return flag;
-        // console.log('isstandalone', ingredient, reactions[key][0], reactions[key][0][ingredient])
-        return reactions[key][0][ingredient] || flag;
+        return reactions[key].inputs[ingredient] || flag;
       }, false);
 
       //Prioritise standalones if they do not have ORE as an ingredient
 
       if (isStandalone) {
-        console.log('isStandaline!', ingredient);
         currentReaction = ingredient;
         validReactions.push(ingredient);
       }
     });
 
-    console.log('validReaction', validReactions);
     currentReaction =
-      validReactions.filter(reaction => !reactions[reaction][0]['ORE'])[0] ||
+      validReactions.filter(reaction => !reactions[reaction].inputs['ORE'])[0] ||
       validReactions[0];
 
-    console.log('currentReaction', currentReaction);
-    console.log('current demand', currentDemand);
-
     const reaction = reactions[currentReaction];
-    const outputQuantity = reaction[1][currentReaction];
+    const outputQuantity = reaction.outputQuantity;
 
     const requiredQuantity = Math.ceil(
       currentDemand[currentReaction] / outputQuantity
     );
 
-    Object.entries(reactions[currentReaction][0]).map(([input, quantity]) => {
-      console.log('input, quant', input, quantity, quantity * requiredQuantity);
+    Object.entries(reactions[currentReaction].inputs).map(([input, quantity]) => {
       if (currentDemand[input]) {
         currentDemand[input] += quantity * requiredQuantity;
       } else {
@@ -86,9 +82,8 @@ const solution = input => {
       }
     });
 
-    // delete currentDemand[currentReaction];
     currentDemand[currentReaction] -=
-      reactions[currentReaction][1][currentReaction] * requiredQuantity;
+      reactions[currentReaction].outputQuantity * requiredQuantity;
   }
 
   return currentDemand['ORE'];
