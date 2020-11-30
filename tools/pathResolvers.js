@@ -5,12 +5,15 @@ import esDirname from 'es-dirname';
 
 const __dirname = esDirname();
 
-const dayResolver = day => day.length === 1 || day < 10 ? `0${day}` : `${day}`;
+const dayResolver = day =>
+  day.length === 1 || day < 10 ? `0${day}` : `${day}`;
 
-const getSolutionPath = (day, part) =>
-  `${__dirname}/../src/days/${day}/part${part}.js`;
+const yearResolver = year => (year.length === 2 ? `20${year}` : year);
 
-const getInputPath = day =>
-  `${__dirname}/../src/days/${day}/input.txt`;
+const getSolutionPath = ({ day, part, year }) =>
+  `${__dirname}/../src/${year}/${day}/part${part}.js`;
 
-export { dayResolver, getInputPath, getSolutionPath };
+const getInputPath = ({ day, year }) =>
+  `${__dirname}/../src/${year}/${day}/input.txt`;
+
+export { dayResolver, yearResolver, getInputPath, getSolutionPath };
