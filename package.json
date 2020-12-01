@@ -1,15 +1,15 @@
 {
-  "name": "advent-of-code-2019",
+  "name": "advent-of-code",
   "version": "1.0.0",
-  "description": "Advent of Code 2019 Solutions",
+  "description": "Advent of Code Solutions",
   "engines": {
     "node": ">=13.2"
   },
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --harmony-nullish --harmony-optional-chaining ./node_modules/.bin/jest",
-    "start": "node --harmony-nullish --harmony-optional-chaining index.js"
+    "test": "node ./node_modules/.bin/jest",
+    "start": "node index.js"
   },
   "keywords": [
     "advent",
