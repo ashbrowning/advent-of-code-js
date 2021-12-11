@@ -14,7 +14,7 @@
     {
       "type": "shell",
       "label": "NPM Start",
-      "command": "npm run start 2 1",
+      "command": "npm run start 3 2",
     }
   ]
 }

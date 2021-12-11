@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/index.js",
-      "args": ["11", "2"],
+      "args": ["3", "2"],
       "runtimeVersion": "15.3.0"
     }
   ]
