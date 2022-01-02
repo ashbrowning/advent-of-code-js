@@ -29,6 +29,6 @@ const solution = input => {
   return coordSet.size;
 };
 
-const answer = 1694;
+const answer = 666;
 
 export { solution, answer };
