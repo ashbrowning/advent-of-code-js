@@ -1,4 +1,4 @@
-const regex = /(\d)|(zero|one|two|three|four|five|six|seven|eight|nine)/g;
+const regex = /(?=(\d|one|two|three|four|five|six|seven|eight|nine))/g;
 
 const stringToNumberMap = {
   zero: 0,
@@ -13,26 +13,26 @@ const stringToNumberMap = {
   nine: 9
 };
 
+const getNumber = stringNumber =>
+  stringToNumberMap[stringNumber] || stringNumber;
+
 const solution = input => {
   const calibrations = [];
+
   for (let line of input) {
-    const numbers = line.match(regex);
+    const numbers = Array.from(line.matchAll(regex)).map(match => match[1]);
 
     if (numbers.length === 0) {
       continue;
     }
 
-    if (numbers.length === 1) {
-      calibrations.push(Number(`${numbers[0]}${numbers[0]}`));
-      continue;
-    }
-
-    calibrations.push(Number(`${numbers[0]}${numbers.at(-1)}`));
+    calibrations.push(
+      Number(`${getNumber(numbers[0])}${getNumber(numbers.at(-1))}`)
+    );
   }
-
   return calibrations.reduce((a, b) => a + b);
 };
 
-const answer = 55538;
+const answer = 54875;
 
 export { solution, answer };
