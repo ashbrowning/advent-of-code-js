@@ -4,7 +4,7 @@ import { dayResolver, yearResolver, getInputPath, getSolutionPath } from './path
 
 const { differenceInMilliseconds, format } = datefns;
 
-const launcher = async ({ dayArg, partArg: part, yearArg = '2023', log = true }) => {
+const launcher = async ({ dayArg, partArg: part, yearArg = '2024', log = true }) => {
   // const day = !dayArg.length || dayArg.length === 1 ? `0${dayArg}` : `${dayArg}`;
   const day = dayResolver(dayArg);
   const year = yearResolver(yearArg);
