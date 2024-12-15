@@ -1,5 +1,3 @@
-const regex = /(\d+)\w+(\d+)/g;
-
 const solution = input => {
   const firstList = [];
   const secondList = [];
