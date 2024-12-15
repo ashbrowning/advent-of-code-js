@@ -1,4 +1,4 @@
-const parseInput = input => input.map(line => line.split(' ').map(x => parseInt(x)));
+import { parseInput } from './utils.js';
 
 const testReport = report => {
   const differences = [];
