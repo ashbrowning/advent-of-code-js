@@ -13,7 +13,6 @@ const solution = input => {
 
   let total = 0;
   for (let i of firstList) {
-    console.log('i', i);
     if (!cache[i]) {
       const linetotal = secondList.reduce((acc, curr) => curr === i ? acc + 1 : acc, 0);
       cache[i] = linetotal * i;
