@@ -1,0 +1,1 @@
+export const parseInput = input => input.map(line => line.split(' ').map(x => parseInt(x)));
