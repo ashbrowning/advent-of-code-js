@@ -3,6 +3,7 @@ const samxRegex = /(SAMX)/g;
 
 const solution = input => {
 
+  console.time('parse');
   // get all rows/columns/diagonals as strings
   // Horizontal
   const lines = [...input];
@@ -50,22 +51,26 @@ const solution = input => {
     let line = "";
 
     for (let x = 0; y - x >= 0; x++) {
-      console.log('coord', y - x, input.length - x - 1);
       line += input[y - x][input.length - x - 1];
     }
     lines.push(line);
   }
 
-  for (let line of lines) {
-    console.log(line);
-  }
+  // for (let line of lines) {
+  //   console.log(line);
+  // }
 
-  return lines.reduce((acc, line) => {
+  console.timeEnd('parse');
+  console.time('calc');
+  
+  const rval = lines.reduce((acc, line) => {
     const regexMatches = line.match(xmasRegex)?.length || 0;
     const smaxMatches = line.match(samxRegex)?.length || 0;
     // console.log(line, regexMatches, smaxMatches);
     return acc + regexMatches + smaxMatches;
   }, 0)
+  console.timeEnd('calc');
+  return rval;
 };
 
 const answer = 2569;
