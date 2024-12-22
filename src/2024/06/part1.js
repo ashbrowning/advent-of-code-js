@@ -27,6 +27,8 @@ const getNextCoordinates = (currentCoordiantes, directionIndex) => {
 }
 
 const solution = input => {
+  const MAX_COORD = input.length; // Assume square grid
+  const isInBounds = (coords) => coords[1] < MAX_COORD && coords[1] >= 0 && coords[0] < MAX_COORD && coords[0] >= 0;
 
   const { startCoord, obsticalCoords } = findStartingCoords(input);
   let directionIndex = 0; // Start facing 'UP'
@@ -34,19 +36,19 @@ const solution = input => {
   const visitedCoordinates = new Set();
 
   // While we stay within the grid
-  while (currentCoordiantes[1] < input.length && currentCoordiantes[1] >= 0 && currentCoordiantes[0] < input[0].length && currentCoordiantes[0] >= 0) {
+  while (isInBounds(currentCoordiantes)) {
     visitedCoordinates.add(getSerialisedCoords(currentCoordiantes));
 
     if (obsticalCoords.has(getSerialisedCoords(getNextCoordinates(currentCoordiantes, directionIndex)))) {
       // rotate!
       directionIndex = (directionIndex + 1) % 4;
-      console.log('rotating to', directionIndex);
     }
 
     // move!
     currentCoordiantes[0] += directionDelta[directionIndex][0];
     currentCoordiantes[1] += directionDelta[directionIndex][1];
   }
+
   return visitedCoordinates.size;
 };
 
