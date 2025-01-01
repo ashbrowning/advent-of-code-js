@@ -1,4 +1,4 @@
-import { gridFromRows } from '../../utils/grids.js';
+import { numberGridFromRows } from '../../utils/grids.js';
 
 const addOneToGrid = grid => grid.map(col => col.map(cell => cell + 1));
 
@@ -43,7 +43,7 @@ const doSteps = gridInput => {
 };
 
 const solution = input => {
-  let grid = gridFromRows(input);
+  let grid = numberGridFromRows(input);
   return doSteps(grid, 1000);
 };
 
